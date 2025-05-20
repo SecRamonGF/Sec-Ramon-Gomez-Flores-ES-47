@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Usuario - SECUNDARIA RAMÓN GÓMEZ FLORES</title>
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Century+Gothic&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Validación de Usuario - SECUNDARIA RAMÓN GÓMEZ FLORES</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="grupos.html">Grupos</a></li>
+                <li><a href="asignaturas.html">Asignaturas</a></li>
+                <li><a href="noticias-eventos.html">Noticias y Eventos</a></li>
+                <li><a href="admisiones.html">Admisiones</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="galeria.html">Galería</a></li>
+                <li><a href="validar-usuario.html">Validar Cuenta</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="validacion-principal">
+            <h2>Validación de Cuenta</h2>
+            <p>Para acceder a ciertas funcionalidades o registrarte, por favor, introduce tu correo electrónico. Te enviaremos un código de validación (simulado) para verificar tu identidad.</p>
+
+            <form id="validacionForm" class="formulario-contacto">
+                <label for="emailValidacion">Correo Electrónico:</label>
+                <input type="email" id="emailValidacion" name="emailValidacion" required>
+                <span class="error-message" id="email-validacion-error"></span>
+
+                <button type="submit">Enviar Código de Validación</button>
+            </form>
+
+            <div id="mensaje-validacion" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #007bff; border-left: 5px solid #007bff; border-radius: 8px; background-color: #e6f7ff;">
+                <p><strong>Mensaje de Validación:</strong></p>
+                <p id="mensaje-texto"></p>
+                <p style="font-size: 0.9em; color: #666;">Nota: Este proceso es una simulación en el lado del cliente. En una aplicación real, un código se enviaría por correo electrónico y se verificaría en un servidor.</p>
+            </div>
+
+            <div id="codigoValidacionSeccion" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #f44336; border-left: 5px solid #f44336; border-radius: 8px; background-color: #ffe6e6;">
+                <h3>Ingresa el Código de Validación</h3>
+                <p>Se ha "enviado" un código a <span id="correo-enviado" style="font-weight: bold;"></span>. Por favor, ingrésalo aquí para completar la validación.</p>
+                <input type="text" id="codigoInput" placeholder="Ej: 123456" required>
+                <span class="error-message" id="codigo-error"></span>
+                <button type="button" id="verificarCodigoBtn" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Verificar Código</button>
+            </div>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 SECUNDARIA RAMÓN GÓMEZ FLORES</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const validacionForm = document.getElementById('validacionForm');
+            const emailValidacionInput = document.getElementById('emailValidacion');
+            const emailValidacionError = document.getElementById('email-validacion-error');
+            const mensajeValidacionDiv = document.getElementById('mensaje-validacion');
+            const mensajeTextoP = document.getElementById('mensaje-texto');
+            const codigoValidacionSeccion = document.getElementById('codigoValidacionSeccion');
+            const correoEnviadoSpan = document.getElementById('correo-enviado');
+            const codigoInput = document.getElementById('codigoInput');
+            const codigoError = document.getElementById('codigo-error');
+            const verificarCodigoBtn = document.getElementById('verificarCodigoBtn');
+
+            // Correo principal de la página (para simulación de notificación)
+            const CORREO_ADMIN_SIMULADO = "sec.ramon.gomez.flores.es47@gmail.com";
+
+            // Función para validar el formato del correo electrónico
+            function validateEmail(inputElement, errorElement, errorMessage) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!inputElement.value.trim().match(emailRegex)) { // Usando match() en lugar de test() por consistencia
+                    errorElement.textContent = errorMessage;
+                    inputElement.classList.add('invalid');
+                    return false;
+                } else {
+                    errorElement.textContent = '';
+                    inputElement.classList.remove('invalid');
+                    return true;
+                }
+            }
+
+            validacionForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Previene el envío por defecto del formulario
+
+                let isValid = true;
+
+                // Validar Email para el envío del código
+                if (!validateEmail(emailValidacionInput, emailValidacionError, 'Por favor, introduce un correo electrónico válido.')) {
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    const userEmail = emailValidacionInput.value.trim();
+                    // Genera un código de 6 dígitos aleatorio
+                    const simulatedCode = Math.floor(100000 + Math.random() * 900000).toString(); 
+
+                    // Mostrar mensaje de simulación de envío al usuario
+                    mensajeTextoP.innerHTML = `Se ha "enviado" un código de validación (<code>${simulatedCode}</code>) a <strong>${userEmail}</strong>. ¡Por favor, no compartas este código!`;
+                    mensajeValidacionDiv.style.display = 'block';
+
+                    // Mostrar sección para introducir el código
+                    codigoValidacionSeccion.style.display = 'block';
+                    correoEnviadoSpan.textContent = userEmail;
+                    codigoInput.value = ''; // Limpiar el campo de código
+
+                    // Simulación de correo al administrador
+                    const mensajeAdmin = `
+                        Asunto: Solicitud de Validación de Usuario
+                        De: Un usuario interesado
+                        Correo del usuario: ${userEmail}
+                        Mensaje: Este usuario está intentando validar su cuenta en la página.
+                        (Este es un mensaje simulado generado por el frontend. Para envío real, se necesita un backend.)
+                    `;
+                    console.log("--- Simulación de Correo al Administrador ---");
+                    console.log(mensajeAdmin);
+                    alert(`Simulación: Un correo ha sido "enviado" a ${CORREO_ADMIN_SIMULADO} notificando una solicitud de validación de ${userEmail}. El código generado (solo para fines de prueba y visible en la consola) es: ${simulatedCode}`);
+                    // En una implementación real, aquí se llamaría a la API del backend para enviar el correo al usuario y al administrador.
+                }
+            });
+
+            // Listener para verificar el código de validación
+            verificarCodigoBtn.addEventListener('click', function() {
+                const enteredCode = codigoInput.value.trim();
+                // Asegúrate de que el elemento <code> exista antes de intentar acceder a textContent
+                const codeElement = mensajeTextoP.querySelector('code');
+                const expectedCode = codeElement ? codeElement.textContent : ''; // Obtiene el código "simulado" del mensaje
+
+                if (enteredCode === expectedCode && expectedCode !== '') {
+                    alert('¡Código de validación correcto! Cuenta "validada" exitosamente (simulado).');
+                    // En un proyecto real, aquí se redirigiría al usuario o se cambiaría su estado a "validado" en el backend
+                    validacionForm.reset(); // Limpiar el formulario
+                    mensajeValidacionDiv.style.display = 'none';
+                    codigoValidacionSeccion.style.display = 'none';
+                    emailValidacionInput.classList.remove('invalid'); // Limpiar cualquier estilo de error del email
+                    codigoInput.classList.remove('invalid'); // Limpiar cualquier estilo de error del código
+                    emailValidacionError.textContent = ''; // Limpiar mensaje de error del email
+                    codigoError.textContent = ''; // Limpiar mensaje de error del código
+
+                } else {
+                    codigoError.textContent = 'Código incorrecto o no generado. Por favor, inténtalo de nuevo.';
+                    codigoInput.classList.add('invalid');
+                }
+            });
+
+            // Opcional: Validar el email al perder el foco
+            emailValidacionInput.addEventListener('blur', () => {
+                validateEmail(emailValidacionInput, emailValidacionError, 'Por favor, introduce un correo electrónico válido.');
+            });
+
+            // Limpiar mensaje de error del código al escribir
+            codigoInput.addEventListener('input', () => {
+                codigoError.textContent = '';
+                codigoInput.classList.remove('invalid');
+            });
+        });
+    </script>
+</body>
+</html>

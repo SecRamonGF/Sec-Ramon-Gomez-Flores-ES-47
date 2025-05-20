@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - SECUNDARIA RAMÓN GÓMEZ FLORES</title>
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Century+Gothic&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Contacto - SECUNDARIA RAMÓN GÓMEZ FLORES</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="grupos.html">Grupos</a></li>
+                <li><a href="asignaturas.html">Asignaturas</a></li>
+                <li><a href="noticias-eventos.html">Noticias y Eventos</a></li>
+                <li><a href="admisiones.html">Admisiones</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="galeria.html">Galería</a></li>
+                <li><a href="validar-usuario.html">Validar Cuenta</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="contacto-principal">
+            <h2>Contáctanos</h2>
+            <p>Estamos aquí para ayudarte. No dudes en contactar a la SECUNDARIA RAMÓN GÓMEZ FLORES a través de los siguientes medios:</p>
+
+            <h3>Información de Contacto:</h3>
+            <ul>
+                <li><strong>Dirección:</strong> Av. Niños Héroes #1234, Col. Centro, Chihuahua, Chih.</li>
+                <li><strong>Teléfono:</strong> (614) 123-4567</li>
+                <li><strong>Email:</strong> info@secundariaramongomez.edu.mx</li>
+                <li><strong>Horario de Atención:</strong> Lunes a Viernes, 8:00 AM - 3:00 PM</li>
+            </ul>
+
+            <h3>Envíanos un Mensaje:</h3>
+            <form id="contactForm" class="formulario-contacto" action="#" method="POST">
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <span class="error-message" id="nombre-error"></span>
+
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" id="email" name="email" required>
+                <span class="error-message" id="email-error"></span>
+
+                <label for="asunto">Asunto:</label>
+                <input type="text" id="asunto" name="asunto">
+                <span class="error-message" id="asunto-error"></span>
+
+                <label for="mensaje">Tu Mensaje:</label>
+                <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+                <span class="error-message" id="mensaje-error"></span>
+
+                <button type="submit">Enviar Mensaje</button>
+            </form>
+            <p style="font-size: 0.9em; color: #666;">Nota: Este formulario es una estructura HTML. Para que funcione y envíe mensajes, requiere de una implementación de backend (lado del servidor).</p>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 SECUNDARIA RAMÓN GÓMEZ FLORES</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('contactForm');
+            const nombreInput = document.getElementById('nombre');
+            const emailInput = document.getElementById('email');
+            const mensajeInput = document.getElementById('mensaje'); // Asunto no es requerido, así que no se valida su obligatoriedad
+            
+            const nombreError = document.getElementById('nombre-error');
+            const emailError = document.getElementById('email-error');
+            const mensajeError = document.getElementById('mensaje-error');
+
+            // Función para validar un campo de texto (no vacío)
+            function validateField(inputElement, errorElement, errorMessage) {
+                if (inputElement.value.trim() === '') {
+                    errorElement.textContent = errorMessage;
+                    inputElement.classList.add('invalid'); // Añade una clase para estilos de error
+                    return false;
+                } else {
+                    errorElement.textContent = '';
+                    inputElement.classList.remove('invalid');
+                    return true;
+                }
+            }
+
+            // Función para validar el formato del correo electrónico
+            function validateEmail(inputElement, errorElement, errorMessage) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para email básico
+                if (!emailRegex.test(inputElement.value.trim())) {
+                    errorElement.textContent = errorMessage;
+                    inputElement.classList.add('invalid');
+                    return false;
+                } else {
+                    errorElement.textContent = '';
+                    inputElement.classList.remove('invalid');
+                    return true;
+                }
+            }
+
+            // Listener para el evento submit del formulario
+            form.addEventListener('submit', function(event) {
+                // Previene el envío por defecto del formulario para poder validar
+                event.preventDefault();
+
+                let isValid = true;
+
+                // Validar Nombre
+                if (!validateField(nombreInput, nombreError, 'El nombre es obligatorio.')) {
+                    isValid = false;
+                }
+
+                // Validar Email
+                if (!validateField(emailInput, emailError, 'El correo electrónico es obligatorio.')) {
+                    isValid = false; // Ya marcó como inválido si está vacío
+                } else if (!validateEmail(emailInput, emailError, 'Por favor, introduce un correo electrónico válido.')) {
+                    isValid = false; // Marcó como inválido si el formato es incorrecto
+                }
+
+                // Validar Mensaje
+                if (!validateField(mensajeInput, mensajeError, 'El mensaje es obligatorio.')) {
+                    isValid = false;
+                }
+
+                // Si todos los campos son válidos
+                if (isValid) {
+                    alert('Formulario enviado correctamente (simulado). Necesita un backend para el envío real.');
+                    form.reset(); // Limpia el formulario
+                    // Aquí es donde en un proyecto real se haría un fetch() a tu API o backend
+                } else {
+                    alert('Por favor, corrige los errores en el formulario.');
+                }
+            });
+
+            // Opcional: Validar al perder el foco (blur) para feedback instantáneo
+            nombreInput.addEventListener('blur', () => validateField(nombreInput, nombreError, 'El nombre es obligatorio.'));
+            emailInput.addEventListener('blur', () => {
+                if (emailInput.value.trim() !== '') {
+                    validateEmail(emailInput, emailError, 'Por favor, introduce un correo electrónico válido.');
+                } else {
+                    validateField(emailInput, emailError, 'El correo electrónico es obligatorio.');
+                }
+            });
+            mensajeInput.addEventListener('blur', () => validateField(mensajeInput, mensajeError, 'El mensaje es obligatorio.'));
+        });
+    </script>
+</body>
+</html>
